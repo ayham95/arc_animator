@@ -1,8 +1,7 @@
 name: arc_animator
-description: A flutter package to animate on a circlualr path
+description: A flutter package to animate a widget on a circular path (arc)
 version: 0.1.0
-author:
-homepage:
+homepage: https://github.com/ayham95/arc_animator
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
