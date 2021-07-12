@@ -1,4 +1,5 @@
 library arc_animator;
+
 import 'package:flutter/material.dart';
 
 typedef OffsetChange = Function(Offset);
@@ -30,26 +31,26 @@ class ArcAnimator extends StatefulWidget {
   final AnimationController controller;
   final Curve curve;
   final statusListener;
-  final OffsetChange offsetChanging;
+  final OffsetChange? offsetChanging;
 
-  const ArcAnimator({Key key,
+  const ArcAnimator({
+    Key? key,
     this.begin = Offset.zero,
     this.end = Offset.zero,
-    this.child,
-    this.controller,
+    required this.child,
+    required this.controller,
     this.curve = Curves.linear,
-    this.statusListener, this.offsetChanging})
-      : assert(child != null),
-        assert(controller != null),
-        super(key: key);
+    this.statusListener,
+    this.offsetChanging,
+  }) : super(key: key);
 
   @override
   _ArcAnimatorState createState() => _ArcAnimatorState();
 }
 
 class _ArcAnimatorState extends State<ArcAnimator> {
-  Animation beginTween;
-  Animation endTween;
+  Animation? beginTween;
+  Animation? endTween;
 
   bool start = true;
 
@@ -58,34 +59,37 @@ class _ArcAnimatorState extends State<ArcAnimator> {
     beginTween = MaterialPointArcTween(begin: widget.begin, end: widget.end)
         .chain(CurveTween(curve: widget.curve))
         .animate(widget.controller)
-      ..addListener(() {
-        setState(() {});
-      });
+          ..addListener(() {
+            setState(() {});
+          });
     endTween = MaterialPointArcTween(begin: widget.end, end: widget.begin)
         .chain(CurveTween(curve: widget.curve))
         .animate(widget.controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          setState(() {
-            start = !start;
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              setState(() {
+                start = !start;
+              });
+              widget.controller.reset();
+            }
           });
-          widget.controller.reset();
-        }
-      });
     widget.controller
-        ..addStatusListener((status) {
-      if (widget.statusListener != null) widget.statusListener(status);
-    })..addListener(() {if(widget.offsetChanging!= null) widget.offsetChanging(start ? beginTween.value : endTween.value);});
+      ..addStatusListener((status) {
+        if (widget.statusListener != null) widget.statusListener(status);
+      })
+      ..addListener(() {
+        if (widget.offsetChanging != null) widget.offsetChanging!(start ? beginTween!.value : endTween!.value);
+      });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: start ? beginTween.value : endTween.value,
+      offset: start ? beginTween!.value : endTween!.value,
       child: widget.child,
     );
   }
