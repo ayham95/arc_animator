@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -33,12 +33,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  AnimationController controller;
+  AnimationController? controller;
 
   @override
   void initState() {
-    controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 600));
+    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     super.initState();
   }
 
@@ -52,11 +51,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             curve: Curves.easeInOutSine,
             begin: Offset(60, 60),
             end: Offset(size.width - 60, size.height - 60),
-            controller: controller,
+            controller: controller!,
             statusListener: (status) => print(status),
             offsetChanging: (offset) => print(offset),
             child: FloatingActionButton(
-              onPressed: () => controller.forward(),
+              onPressed: () => controller!.forward(),
             ),
           )
         ],
